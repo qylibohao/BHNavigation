@@ -21,12 +21,19 @@ static NSInteger pushedCount = 0;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor yellowColor];
+    CGFloat red = arc4random() / (CGFloat)INT_MAX;
+    CGFloat green = arc4random() / (CGFloat)INT_MAX;
+    CGFloat blue = arc4random() / (CGFloat)INT_MAX;
+    self.view.backgroundColor = [UIColor colorWithRed:red
+                                               green:green
+                                                 blue:blue
+                                                alpha:1.0];
+    
     
     
     UILabel *switchLabel = [[UILabel alloc] initWithFrame:(CGRect){20, 153, 100, 44}];
     switchLabel.font = [UIFont systemFontOfSize:15];
-    switchLabel.text = @"navi hidden:";
+    switchLabel.text = @"隐藏导航栏 :";
     [self.view addSubview:switchLabel];
     
     UISwitch *aSwitch = [[UISwitch alloc] initWithFrame:(CGRect){160, 160, 90, 44}];
@@ -38,21 +45,21 @@ static NSInteger pushedCount = 0;
     [pushButton setTitle:@"push" forState:UIControlStateNormal];
     [pushButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     pushButton.backgroundColor = [UIColor grayColor];
-    [pushButton addTarget:self action:@selector(pushToVC) forControlEvents:UIControlEventTouchUpInside];
+    [pushButton addTarget:self action:@selector(pushToNextVC) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:pushButton];
     
-    self.bh_NavigationItem.title = [NSString stringWithFormat:@"navi %ld", (long)pushedCount];
+    self.bh_NavigationItem.title = [NSString stringWithFormat:@"第 %ld 页", (long)pushedCount];
     
     __weak typeof(BHViewController) *weakSelf = self;
     
     if (pushedCount > 0) {
-        self.bh_NavigationItem.leftBarButtonItem = [[BHBarButtonItem alloc] initWithTitle:@"back" style:BHBarButtonItemStylePlain handler:^(id sender) {
+        self.bh_NavigationItem.leftBarButtonItem = [[BHBarButtonItem alloc] initWithTitle:@"返回" style:BHBarButtonItemStylePlain handler:^(id sender) {
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }];
     }
     
-    self.bh_NavigationItem.rightBarButtonItem = [[BHBarButtonItem alloc] initWithTitle:[NSString stringWithFormat:@"%ld", (long)pushedCount] style:BHBarButtonItemStylePlain handler:^(id sender) {
-        [weakSelf pushToVC];
+    self.bh_NavigationItem.rightBarButtonItem = [[BHBarButtonItem alloc] initWithTitle:@"下一页" style:BHBarButtonItemStylePlain handler:^(id sender) {
+        [weakSelf pushToNextVC];
     }];
 }
 
@@ -60,7 +67,7 @@ static NSInteger pushedCount = 0;
     [super didReceiveMemoryWarning];
 }
 
-- (void)pushToVC {
+- (void)pushToNextVC {
     
     BHViewController *vc = [[BHViewController alloc] init];
     pushedCount ++;
