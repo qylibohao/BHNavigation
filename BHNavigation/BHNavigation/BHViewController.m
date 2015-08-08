@@ -85,7 +85,7 @@ static NSInteger pushedCount = 0;
 }
 
 
-#pragma mark - Functoions
+#pragma mark - Functions
 
 - (UIColor*)randomColor {
     CGFloat red = arc4random() / (CGFloat)INT_MAX;
